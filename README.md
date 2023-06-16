@@ -9,12 +9,12 @@ NERC.REGION: Categorical (Nominal) -> OrdinalEncoder()<br>
 ANOMALY.LEVEL: Quantitative (Continuous) -> StandardScaler()<br><br>
 1 Nominal Feature, 1 Continuous Feature<br><br>
 
-This baseline model achieved an RMSE of 88.89877210616085 hours. The interpretation of this is that the average error across the predictions was almost 89 hours. This is an average error of almost 4 days, which isn't very good.
+This baseline model achieved an RMSE of 73.13748322195806 hours. The interpretation of this is that the average error across the predictions was about 73 hours. This is an average error of just over 3 days, which isn't very good.
 
 # Final Model
 New features I added include the following: 'OUTAGE.START.TIME' and 'U.S._STATE'. I believe these were both good features to add to our prediction task. The biggest reason for 'OUTAGE.START.TIME' was that I believe there may be time dependent patterns, which encompasses seasonality. I also used 'U.S._STATE' as the other feature because of potential specific geographic patterns that could be present. It creates a more specific picture than 'CLIMATE.REGION' and could extract nuanced patterns in the data.<br>
 
-I chose to divert from the DecisionTreeRegressor and chose ElasticNet Regression algorithm instead due to its flexibility to add two regularization techniques to combat the multicollinearity problem (the techniques that are used in Lasso and Ridge regression). As such, I decided to tune the hyperparameters 'alpha' and 'l1_ratio'. This is because these two are the direct parameters of the regularization penalty that is added to the regression function, more easily influencing the outcome of the model. In order to find the two most optimal parameters, I chose to loop through all combinations of alpha ([0.01, 0.1, 1, ..., 10_000]) and l1_ratio ([0.01, 0.02, 0.03, ..., 0.99, 1]) and chose the combo that resulted in the lowest RMSE. This ended up being an alpha of 1 and an l1_ratio of 0.23. This resulted in my RMSE decreasing to 87.28281214278529 hours. 
+I chose to divert from the DecisionTreeRegressor and chose ElasticNet Regression algorithm instead due to its flexibility to add two regularization techniques to combat the multicollinearity problem (the techniques that are used in Lasso and Ridge regression). As such, I decided to tune the hyperparameters 'alpha' and 'l1_ratio'. This is because these two are the direct parameters of the regularization penalty that is added to the regression function, more easily influencing the outcome of the model. In order to find the two most optimal parameters, I chose to loop through all combinations of alpha ([0.01, 0.1, 1, ..., 10_000]) and l1_ratio ([0.01, 0.02, 0.03, ..., 0.99, 1]) and chose the combo that resulted in the lowest RMSE. This ended up being an alpha of 1 and an l1_ratio of 0.97. This resulted in my RMSE decreasing to 71.39593079478831 hours. 
 
 # Fairness Analysis
 The two groups I decided to evaluate my model on were outages that started in the first half of the year (Jan - June) and outages that started in the second half of the year (Jul - Dec).<br>
@@ -24,5 +24,5 @@ Null Hypothesis: The error between the first half of the year and the second hal
 Alternative Hypothesis: The error between the first half of the year is greater than the second half of the year, indicating our model is biased in its prediction ability in the halves of the calendar year.<br>
 Test Statistic: (First Half RMSE) - (Second Half RMSE)<br>
 Significance Level: 0.01<br>
-P Value: 0.2144<br>
+P Value: 0.2056<br>
 Conclusion: We failed to reject the null hypothesis. We tentitively cannot divert from the claim that the model is unfair in being more error prone in the first half of the calendar year compared to the second half.
